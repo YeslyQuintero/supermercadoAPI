@@ -1,7 +1,5 @@
 package com.supermercado.producto.controllers;
 
-package com.supermercado.producto.entity;
-package com.supermercado.producto.repository;
 import com.supermercado.producto.entity.Producto;
 import com.supermercado.producto.repository.ProductoRepository;
 import com.supermercado.producto.util.Message;

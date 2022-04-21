@@ -2,10 +2,11 @@ package com.supermercado.producto.repository;
 
 import com.supermercado.producto.entity.Producto;
 
+
 import java.util.List;
 import java.util.Optional;
 
-public interface ProductoRepository extends JpaRepository<Producto, Long>{
+public interface ProductoRepository {
     Optional<Producto> findById(Long id);
 
     Producto save(Producto producto);
