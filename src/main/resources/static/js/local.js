@@ -1,25 +1,5 @@
 //funciones propias de la app YESLY VALENTINA QUINTERO
-async function login(){
-    var myForm = document.getElementById("myForm");
-    var formData = new FormData(myForm);
-    var jsonData = {};
-    for(var [k, v] of formData){//convertimos los datos a json
-        jsonData[k] = v;
-    }
-    var settings={
-        method: 'POST',
-        headers:{
-            'Accept':'application/json',
-            'Content-Type':'application/json'
-        },
-        body: JSON.stringify(jsonData)
-    }
-    const request = await fetch("api/auth/login", settings);
-    console.log(await request.text());
-    if(request.ok){
-        location.href = "dashboard.html";
-    }
-}
+
 
 function listar(){
     var settings={
@@ -33,9 +13,9 @@ function listar(){
     .then(response => response.json())
     .then(function(data){
         //if(data.lenght>0){
-            var producto = '';
+            var productos = '';
             for(const producto of data){
-                producto +=
+                productos +=
                 '<tr>'+
                 '<th scope="row">'+producto.id+'</th>'+
                 '<td>'+producto.color+'</td>'+
@@ -50,29 +30,12 @@ function listar(){
                 '</td>'+
               '</tr>';
             }
-            document.getElementById("listar").innerHTML = producto;
+            document.getElementById("listar").innerHTML = productos;
         //}
     })
 }
 
-async function sendData(path){
-    var myForm = document.getElementById("myForm");
-    var formData = new FormData(myForm);
-    var jsonData = {};
-    for(var [k, v] of formData){//convertimos los datos a json
-        jsonData[k] = v;
-    }
-    const request = await fetch(path, {
-        method: 'POST',
-        headers:{
-            'Accept':'application/json',
-            'Content-Type':'application/json'
-        },
-        body: JSON.stringify(jsonData)
-    });
-    myForm.reset();
-    console.log(await request.text())
-}
+
 
 function eliminaProducto(id){
     var settings={
@@ -98,7 +61,7 @@ function verModificarProducto(id){
             'Content-Type':'application/json'
         },
     }
-    fetch("api/users/"+id,settings)
+    fetch("api/producto/"+id,settings)
     .then(response => response.json())
     .then(function(producto){
 
@@ -117,16 +80,16 @@ function verModificarProducto(id){
                     '<input type="text" name="talla" class="form-control" id="talla" required value = "'+producto.talla+'"> <br>'+
                     '<label for="diseño" class="form-label">Diseño</label>'+
                     '<input type="text" name="diseño" class="form-control" id="diseño" required value = "'+producto.diseño+'"> <br>'+
-                    '<label for="firstName" class="form-label">First Name</label>'+
-                    '<input type="text" name="sensacion" class="form-control" id="sensacion" required value = "'+producto.sensacion+'"> <br>'+
                     '<label for="sensacion" class="form-label">Sensacion</label>'+
-                    '<input type="text" name="precio" class="form-control" id="precio" required value = "'+producto.precio+'"> <br>'+
+                    '<input type="text" name="sensacion" class="form-control" id="sensacion" required value = "'+producto.sensacion+'"> <br>'+
                     '<label for="precio" class="form-label">Precio</label>'+
+                    '<input type="text" name="precio" class="form-control" id="precio" required value = "'+producto.precio+'"> <br>'+
+
                     '<button type="button" class="btn btn-outline-warning" onclick="modificarProducto(\''+producto.id+'\')">Modificar</button>'+
                 '</form>';
             }
             document.getElementById("contentModal").innerHTML = cadena;
-            var myModal = new bootstrap.Modal(document.getElementById('modalProducto'))
+            var myModal = new bootstrap.Modal(document.getElementById('modalUsuario'))
             myModal.toggle();
     })
 }
@@ -149,12 +112,13 @@ async function modificarProducto(id){
     listar();
     alertas("Se ha modificado el producto exitosamente",1)
     document.getElementById("contentModal").innerHTML = '';
-    var myModalEl = document.getElementById('modalProducto')
+    var myModalEl = document.getElementById('modalUsuario')
     var modal = bootstrap.Modal.getInstance(myModalEl)
     modal.hide();
 }
 
 function verProducto(id){
+
     var settings={
         method: 'GET',
         headers:{
@@ -181,7 +145,7 @@ function verProducto(id){
                 '</ul>';
             }
             document.getElementById("contentModal").innerHTML = cadena;
-            var myModal = new bootstrap.Modal(document.getElementById('modalProducto'))
+            var myModal = new bootstrap.Modal(document.getElementById('modalUsuario'))
             myModal.toggle();
     })
 }
@@ -202,7 +166,8 @@ function alertas(mensaje, tipo){
 }
 
 function registerForm(){
-    cadena = '<div class="p-3 mb-2 bg-light text-dark">'+
+var s ="api/producto";
+    var cadena = '<div class="p-3 mb-2 bg-light text-dark">'+
                 '<h1 class="display-6"><i class="fa-solid fa-user-pen"></i>Registrar producto</h1>'+
                 '</div>'+
 
@@ -218,14 +183,14 @@ function registerForm(){
                     '<input type="text" name="sensacion" class="form-control" id="sensacion" required> <br>'+
                     '<label for="precio" class="form-label">Precio</label>'+
                     '<input type="text" name="precio" class="form-control" id="precio" required> <br>'+
-                    '<button type="button" class="btn btn-outline-info" onclick="registrarProducto()">Registrar</button>'+
+                    '<button type="button" class="btn btn-outline-info" onclick="registrarProducto(\''+s+'\')">Registrar</button>'+
                 '</form>';
                 document.getElementById("contentModal").innerHTML = cadena;
-                var myModal = new bootstrap.Modal(document.getElementById('modalProducto'))
+                var myModal = new bootstrap.Modal(document.getElementById('modalUsuario'))
                 myModal.toggle();
 }
 
-async function registrarProducto(){
+async function registrarProducto(path){
     var myForm = document.getElementById("myForm");
     var formData = new FormData(myForm);
     var jsonData = {};
@@ -243,7 +208,7 @@ async function registrarProducto(){
     listar();
     alertas("Se ha registrado el producto exitosamente",1)
     document.getElementById("contentModal").innerHTML = '';
-    var myModalEl = document.getElementById('modalProducto')
+    var myModalEl = document.getElementById('modalUsuario')
     var modal = bootstrap.Modal.getInstance(myModalEl)
     modal.hide();
 }
