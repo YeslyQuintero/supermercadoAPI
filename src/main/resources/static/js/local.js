@@ -116,46 +116,7 @@ async function modificarProducto(id){
 }
 
 function verProducto(id){
-var s ="api/producto";
-    var cadena = '<div class="p-3 mb-2 bg-light text-dark">'+
-                '<h1 class="display-6"><i class="fa-solid fa-user-pen"></i>Registrar producto</h1>'+
-                '</div>'+
 
-                '<form action="" method="post" id="myForm">'+
-                    '<input type="hidden" name="id" id="id">'+
-                    '<label for="color" class="form-label">Color</label>'+
-                    '<input type="text" name="color" class="form-control" id="color" required> <br>'+
-                    '<label for="talla" class="form-label">Talla</label>'+
-                    '<input type="text" name="talla" class="form-control" id="talla" required> <br>'+
-                    '<label for="diseño" class="form-label">Diseño</label>'+
-                    '<input type="text" name="diseño" class="form-control" id="diseño" required> <br>'+
-                    '<label for="sensacion" class="form-label">Sensacion</label>'+
-                    '<input type="text" name="sensacion" class="form-control" id="sensacion" required> <br>'+
-                    '<label for="precio" class="form-label">Precio</label>'+
-                    '<input type="text" name="precio" class="form-control" id="precio" required> <br>'+
-                    '<button type="button" class="btn btn-outline-info" onclick="registrarProducto(\''+s+'\')">Registrar</button>'+
-                '</form>';
-                document.getElementById("contentModal").innerHTML = cadena;
-                var myModal = new bootstrap.Modal(document.getElementById('modalUsuario'))
-                myModal.toggle();
-}
-
-function alertas(mensaje, tipo){
-    if(tipo == 1){//success verde
-        color = "success";
-    }
-    else{//danger rojo
-        color = "danger";
-    }
-    var alerta = '<div class="alert alert-'+color+' alert-dismissible fade show" role="alert">'+
-                    '<strong><i class="fa-solid fa-triangle-exclamation"></i></strong>' +
-                    mensaje+
-                    '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'+
-                 '</div>';
-    document.getElementById("datos").innerHTML = alerta;
-}
-
-function registerForm(){
     var settings={
         method: 'GET',
         headers:{
@@ -185,6 +146,46 @@ function registerForm(){
             var myModal = new bootstrap.Modal(document.getElementById('modalUsuario'))
             myModal.toggle();
     })
+}
+
+function alertas(mensaje, tipo){
+    if(tipo == 1){//success verde
+        color = "success";
+    }
+    else{//danger rojo
+        color = "danger";
+    }
+    var alerta = '<div class="alert alert-'+color+' alert-dismissible fade show" role="alert">'+
+                    '<strong><i class="fa-solid fa-triangle-exclamation"></i></strong>' +
+                    mensaje+
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'+
+                 '</div>';
+    document.getElementById("datos").innerHTML = alerta;
+}
+
+function registerForm(){
+var s ="api/producto";
+    var cadena = '<div class="p-3 mb-2 bg-light text-dark">'+
+                '<h1 class="display-6"><i class="fa-solid fa-user-pen"></i>Registrar producto</h1>'+
+                '</div>'+
+
+                '<form action="" method="post" id="myForm">'+
+                    '<input type="hidden" name="id" id="id">'+
+                    '<label for="color" class="form-label">Color</label>'+
+                    '<input type="text" name="color" class="form-control" id="color" required> <br>'+
+                    '<label for="talla" class="form-label">Talla</label>'+
+                    '<input type="text" name="talla" class="form-control" id="talla" required> <br>'+
+                    '<label for="diseño" class="form-label">Diseño</label>'+
+                    '<input type="text" name="diseño" class="form-control" id="diseño" required> <br>'+
+                    '<label for="sensacion" class="form-label">Sensacion</label>'+
+                    '<input type="text" name="sensacion" class="form-control" id="sensacion" required> <br>'+
+                    '<label for="precio" class="form-label">Precio</label>'+
+                    '<input type="text" name="precio" class="form-control" id="precio" required> <br>'+
+                    '<button type="button" class="btn btn-outline-info" onclick="registrarProducto(\''+s+'\')">Registrar</button>'+
+                '</form>';
+                document.getElementById("contentModal").innerHTML = cadena;
+                var myModal = new bootstrap.Modal(document.getElementById('modalUsuario'))
+                myModal.toggle();
 }
 
 async function registrarProducto(path){
