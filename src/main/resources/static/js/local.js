@@ -1,16 +1,17 @@
 //funciones propias de la app
 function listarProductos(){
+validaToken()
     var settings={
         method: 'GET',
         headers:{
             'Accept':'application/json',
-            'Content-Type':'application/json'
+            'Content-Type':'application/json',
+            'Authorization': localStorage.token
         },
     }
     fetch("api/producto",settings)
     .then(response => response.json())
     .then(function(data){
-        //if(data.lenght>0){
             var productos = '';
             for(const producto of data){
                 productos +=
@@ -36,27 +37,31 @@ function listarProductos(){
 
 
 function eliminaProducto(id){
+validaToken()
     var settings={
         method: 'DELETE',
         headers:{
             'Accept':'application/json',
-            'Content-Type':'application/json'
+            'Content-Type':'application/json',
+            'Authorization': localStorage.token
         },
     }
     fetch("api/producto/"+id,settings)
     .then(response => response.json())
     .then(function(data){
-        listar();
+        listarProductos();
         alertas("Se ha eliminado el producto exitosamente",2)
     })
 }
 
 function verModificarProducto(id){
+validaToken()
     var settings={
         method: 'GET',
         headers:{
             'Accept':'application/json',
-            'Content-Type':'application/json'
+            'Content-Type':'application/json',
+            'Authorization': localStorage.token
         },
     }
     fetch("api/producto/"+id,settings)
@@ -107,7 +112,7 @@ async function modificarProducto(id){
         },
         body: JSON.stringify(jsonData)
     });
-    listar();
+    listarProductos();
     alertas("Se ha modificado el producto exitosamente",1)
     document.getElementById("contentModal").innerHTML = '';
     var myModalEl = document.getElementById('modalUsuario')
@@ -116,12 +121,13 @@ async function modificarProducto(id){
 }
 
 function verProducto(id){
-
+validaToken()
     var settings={
         method: 'GET',
         headers:{
             'Accept':'application/json',
-            'Content-Type':'application/json'
+            'Content-Type':'application/json',
+            'Authorization': localStorage.token
         },
     }
     fetch("api/producto/"+id,settings)
@@ -189,6 +195,7 @@ var s ="api/producto";
 }
 
 async function registrarProducto(path){
+validaToken()
     var myForm = document.getElementById("myForm");
     var formData = new FormData(myForm);
     var jsonData = {};
@@ -198,25 +205,20 @@ async function registrarProducto(path){
     const request = await fetch("api/producto", {
         method: 'POST',
         headers:{
-            'Accept':'application/json',
-            'Content-Type':'application/json'
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': localStorage.token
         },
         body: JSON.stringify(jsonData)
     });
-    listar();
-    alertas("Se ha registrado el producto exitosamente",1)
-    document.getElementById("contentModal").innerHTML = '';
-    var myModalEl = document.getElementById('modalUsuario')
-    var modal = bootstrap.Modal.getInstance(myModalEl)
-    modal.hide();
-}
+    alertas(" Se ha registrado el producto exitosamente!",1)
+    myForm.reset();
+    listarProductos();
+        document.getElementById("contentModal").innerHTML = '';
+        var myModalEl = document.getElementById('modalUsuario');
+        var modal = bootstrap.Modal.getInstance(myModalEl)
+        modal.hide();
 
-function modalConfirmacion(texto, funcion){
-    document.getElementById("contenidoConfirmacion").innerHTML = texto;
-    var myModal = new bootstrap.Modal(document.getElementById('modalConfirmacion'))
-    myModal.toggle();
-    var confirmar = document.getElementById("confirmar");
-    confirmar.onclick = funcion;
 }
 
 

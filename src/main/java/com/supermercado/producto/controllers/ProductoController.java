@@ -2,6 +2,7 @@ package com.supermercado.producto.controllers;
 
 import com.supermercado.producto.entity.Producto;
 import com.supermercado.producto.repository.ProductoRepository;
+import com.supermercado.producto.util.JWTUtil;
 import com.supermercado.producto.util.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,41 +18,48 @@ public class ProductoController {
     @Autowired
     private ProductoRepository productoRepository;
     private Message message = new Message();
+    @Autowired
+    private JWTUtil jwtUtil;
+    private boolean validarToken(String token){
+        String id = jwtUtil.getKey(token);
+        return id !=null;
+    }
 
     @RequestMapping(value = "api/producto/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Producto> getProducto(@PathVariable Long id){
-        Optional<Producto> foundUser = productoRepository.findById(id);
-        if(foundUser.isPresent()){
-            return ResponseEntity.ok(foundUser.get());
+    public ResponseEntity<Producto> getProducto(@PathVariable Long id, @RequestHeader(value = "Authorization") String token){
+        if(!validarToken(token)){return null;}
+        Optional<Producto> foundProducto = productoRepository.findById(id);
+        if(foundProducto.isPresent()){
+            return ResponseEntity.ok(foundProducto.get());
         }
         Map<String, String> errorResponse=new HashMap<>();
         return new ResponseEntity(errorResponse,HttpStatus.NOT_FOUND);
     }
 
-    @RequestMapping(value = "api/producto", method = RequestMethod.POST)
-    public ResponseEntity createProducto(@RequestBody Producto producto){
-        Map<String,String> response = new LinkedHashMap<>();
+    @RequestMapping(value = "api/producto",method = RequestMethod.POST)
+    public ResponseEntity<Optional> createProduct(@RequestBody Producto producto){
+        Map<String, String> response = new LinkedHashMap<>();
         try{
-            producto.setColor(producto.getColor());
-            producto.setTalla(producto.getTalla());
-            producto.setDiseño(producto.getDiseño());
-            producto.setSensacion(producto.getSensacion());
-            producto.setPrecio(producto.getPrecio());
+
             productoRepository.save(producto);
-            return message.viewMessage(HttpStatus.OK, "success", "registered producto success!");
+            return message.viewMessage(HttpStatus.OK,"success","registered product success!");
         }catch (Exception e){
-            return message.viewMessage(HttpStatus.INTERNAL_SERVER_ERROR, "error", "An error occurred while registering the producto!");
+            return message.viewMessage(HttpStatus.INTERNAL_SERVER_ERROR,"error","An error occurred while registering the product!");
         }
+
+
     }
 
     @RequestMapping(value = "api/producto", method = RequestMethod.GET)
-    public List<Producto> listProducto(){
+    public List<Producto> listProducto(@RequestHeader(value = "Authorization") String token){
+        if(!validarToken(token)){return null;}
         return productoRepository.findAll();
 
     }
 
     @RequestMapping(value = "api/producto/{id}", method = RequestMethod.PUT)
-    public ResponseEntity editProducto(@RequestBody Producto newProducto, @PathVariable Long id){
+    public ResponseEntity editProducto(@RequestBody Producto newProducto, @PathVariable Long id,@RequestHeader(value = "Authorization") String token){
+        if(!validarToken(token)){return null;}
         Map<String, String> response = new HashMap<>();
         try{
             Producto producto = productoRepository.findById(id).get();
@@ -69,7 +77,8 @@ public class ProductoController {
     }
 
     @RequestMapping(value = "api/producto/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity deleteProducto(@PathVariable Long id){
+    public ResponseEntity deleteProducto(@PathVariable Long id, @RequestHeader(value = "Authorization") String token){
+        if(!validarToken(token)){return null;}
         Map<String, String> response = new HashMap<>();
         try {
             Producto producto = productoRepository.findById(id).get();
